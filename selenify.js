@@ -1,30 +1,37 @@
 'use strict';
 
-
 var selenify = function (cb) {
 
   var request = require("request");
+  var apiUrl = "http://localhost:4444/wd/hub";
 
   this.checkStatus = function(cb){
-    request({uri: 'http://localhost:4444/wd/hub/status', json:true}, function (error, response) {
-      cb(response);
+    var requestOptions = {
+      uri: apiUrl + '/status',
+      json: true
+    }
+
+    request(requestOptions, function (err, response) {
+      cb(err, response);
     });
   }
-  // var options = {
-  //  uri: 'http://google.com',
-  //  method: 'GET',
-  //  json: {
-  //    your: 'json',
-  //    goes: 'here'
-  //  }
-  // };
 
-  
+  this.openBrowser = function(browserName, cb){
+    var requestOptions = {
+      uri: apiUrl + '/session',
+      method: 'POST',
+      json: {
+        desiredCapabilities: {
+          "browserName": browserName
+        }
+      }
+    }
 
-  //return 1;
+    request(requestOptions, function (err, response) {
+      cb(err, response);
+    });
+  }
 
 }
-
-//selenium();
 
 module.exports = selenify;
