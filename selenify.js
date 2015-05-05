@@ -37,6 +37,17 @@ var selenify = function (cb) {
     });
   }
 
+  this.closeBrowser = function(cb){
+    var requestOptions = {
+      uri: apiUrl + '/session/' + this.sessionId,
+      method: 'DELETE'
+    }
+
+    request(requestOptions, function (err, response) {
+      cb(err, response.body);
+    });
+  }
+
   this.navigateToURL = function(url, cb){
     var requestOptions = {
       uri: apiUrl + '/session/' + this.sessionId + '/url',
@@ -62,18 +73,29 @@ var selenify = function (cb) {
     });
   }
 
-  this.findHTMLElement = function(using, value, cb){
+  this.findHTMLElement = function(elementQuery, cb){
     var requestOptions = {
       uri: apiUrl + '/session/' + this.sessionId + '/element',
       method: 'POST',
+      json: elementQuery
+    }
+
+    request(requestOptions, function (err, response) {
+      cb(err, response.body.value.ELEMENT);
+    });
+  }
+
+  this.typeInsideElement = function(elementId, value, cb){
+    var requestOptions = {
+      uri: apiUrl + '/session/' + this.sessionId + '/element/' + elementId + '/value',
+      method: 'POST',
       json: {
-        using: using,
         value: value
       }
     }
 
     request(requestOptions, function (err, response) {
-      cb(err, response.body.value.ELEMENT);
+      cb(err, response.body);
     });
   }
 

@@ -12,6 +12,8 @@ describe('selenium()', function () {
   // increase mocha's timeout to 10 seconds.
   this.timeout(10000);
 
+  var elementId;
+
   it('Should return a status of 0', function (done) {
     selenium.checkStatus(function(err, status){
       expect(status).to.equal(0);
@@ -43,12 +45,30 @@ describe('selenium()', function () {
   });
 
   it('Should find HTML element by name', function (done) {
-    selenium.findHTMLElement("name","q",function(err, element){
+    selenium.findHTMLElement({ using: "name", value: "q" },function(err, element){
       expect(element).to.exist;
+      elementId = element;
       done();
     });
   });
 
+  it('Should type text inside HTML element', function (done) {
+    selenium.typeInsideElement(elementId, "Hello World".split(''),function(err, response){
+      expect(response.status).to.equal(0);
+      done();
+    });
+  });
 
+  
+  it('Should close the browser', function (done) {
+    // Wrap this in a timeout so we can see the last test finish
+    // before the browser closes.
+    setTimeout(function(){
+      selenium.closeBrowser(function(err, response){
+        expect(response.status).to.equal(0);
+        done();
+      });
+    }, 2000);
+  });
 
 });
