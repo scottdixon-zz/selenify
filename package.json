@@ -8,6 +8,6 @@
     "request": "^2.55.0"
   },
   "scripts": {
-    "test": "mocha ./spec/selenium.js"
+    "test": "mocha ./spec/selenify.js"
   }
 }
